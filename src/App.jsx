@@ -4,12 +4,12 @@ import { ThemeProvider } from 'styled-components';
 import './App.css';
 
 // Import components
-import Header from './components/Header';
-import Footer from './components/Footer';
-import HomePage from './pages/HomePage';
-import DistrictPage from './pages/DistrictPage';
-import VendorDetailPage from './pages/VendorDetailPage';
-import NotFoundPage from './pages/NotFoundPage';
+import Header from './components/Header.jsx';
+import Footer from './components/Footer.jsx';
+import HomePage from './pages/HomePage.jsx';
+import DistrictPage from './pages/DistrictPage.jsx';
+import VendorDetailPage from './pages/VendorDetailPage.jsx';
+import NotFoundPage from './pages/NotFoundPage.jsx';
 import GlobalStyle from './styles/GlobalStyle';
 
 // Define theme

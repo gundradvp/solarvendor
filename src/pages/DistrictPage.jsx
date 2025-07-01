@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
-import VendorCard from '../components/VendorCard';
-import { formatDistrictName } from '../components/DistrictList';
+import VendorCard from '../components/VendorCard.jsx';
+import { formatDistrictName } from '../components/DistrictList.jsx';
 import { FaArrowLeft, FaSearch, FaSort } from 'react-icons/fa';
 
 const PageContainer = styled.div`

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import DistrictList from '../components/DistrictList';
-import StatewideVendors from '../components/StatewideVendors';
-import StateFilter from '../components/StateFilter';
-import VendorAnalytics from '../components/VendorAnalytics';
-import CrossStateVendors from '../components/CrossStateVendors';
+import DistrictList from '../components/DistrictList.jsx';
+import StatewideVendors from '../components/StatewideVendors.jsx';
+import StateFilter from '../components/StateFilter.jsx';
+import VendorAnalytics from '../components/VendorAnalytics.jsx';
+import CrossStateVendors from '../components/CrossStateVendors.jsx';
 
 const PageContainer = styled.div`
   max-width: 1200px;

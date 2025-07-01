@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import VendorCard from './VendorCard';
+import VendorCard from './VendorCard.jsx';
 
 const VendorGrid = styled.div`
   display: grid;

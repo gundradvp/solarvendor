@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import { FaArrowLeft, FaStar, FaSolarPanel, FaUsers, FaBolt, FaMapMarkerAlt, FaEnvelope, FaPhone, FaGlobe } from 'react-icons/fa';
-import { formatDistrictName } from '../components/DistrictList';
+import { formatDistrictName } from '../components/DistrictList.jsx';
 
 const PageContainer = styled.div`
   max-width: 1200px;
