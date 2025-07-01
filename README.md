@@ -1,6 +1,69 @@
-# Getting Started with Create React App
+# Solar Vendors Directory for AP & TG
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This React application provides a comprehensive directory of solar vendors operating in Andhra Pradesh and Telangana states in India.
+
+## Features
+
+- **Combined Data Display**: View vendor data from both Andhra Pradesh and Telangana
+- **State Filtering**: Filter vendors based on their operating location (AP only, TG only, or both states)
+- **District-wise Search**: Find vendors operating in specific districts
+- **Statewide Vendor Listing**: View vendors that operate across multiple districts
+- **Cross-State Analysis**: Identify vendors that operate in both states
+- **Vendor Analytics**: View statistics on vendor distribution across states
+- **Detailed Vendor Information**: View comprehensive details about each vendor
+
+## Data Structure
+
+The application uses a combined JSON dataset with the following structure:
+
+```json
+{
+  "vendorId": 123,
+  "vendorName": "Example Solar Company",
+  "contactPersonName": "John Doe",
+  "contactPersonEmail": "john@example.com",
+  "contactPersonMobile": "9123456789",
+  "address": "Sample Address, City, State",
+  "rating": "4.8",
+  "installationCount": 500,
+  "consumerRatingCount": 250,
+  "installedCapacity": 2500,
+  "ap_districts": ["ananthapur", "chittor", "nellore"],
+  "tg_districts": ["hyderabad", "rangareddy"],
+  "states": ["AP", "TG"],
+  "operatesInBothStates": true
+}
+```
+
+## Project Structure
+
+```
+solar-vendors-app/
+├── public/
+│   ├── all_combined_vendors.json
+│   └── ...
+├── src/
+│   ├── components/
+│   │   ├── CrossStateVendors.js
+│   │   ├── DistrictList.js
+│   │   ├── Footer.js
+│   │   ├── Header.js
+│   │   ├── StateFilter.js
+│   │   ├── StatewideVendors.js
+│   │   ├── VendorAnalytics.js
+│   │   └── VendorCard.js
+│   ├── pages/
+│   │   ├── DistrictPage.js
+│   │   ├── HomePage.js
+│   │   ├── NotFoundPage.js
+│   │   └── VendorDetailPage.js
+│   ├── styles/
+│   │   └── GlobalStyle.js
+│   ├── App.js
+│   ├── index.js
+│   └── ...
+└── package.json
+```
 
 ## Available Scripts
 
