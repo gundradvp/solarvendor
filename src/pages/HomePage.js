@@ -14,23 +14,35 @@ const PageContainer = styled.div`
 `;
 
 const Hero = styled.div`
-  background-color: ${props => props.theme.colors.primary};
+  background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
   color: white;
-  padding: 3rem 1rem;
+  padding: 4rem 1rem;
   text-align: center;
   margin-bottom: 3rem;
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(13, 110, 253, 0.3);
 `;
 
 const HeroTitle = styled.h1`
   font-size: 2.5rem;
   margin-bottom: 1rem;
+  font-weight: 700;
+  
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    font-size: 2rem;
+  }
 `;
 
 const HeroSubtitle = styled.p`
   font-size: 1.2rem;
   max-width: 800px;
   margin: 0 auto;
+  opacity: 0.95;
+  line-height: 1.6;
+  
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    font-size: 1rem;
+  }
 `;
 
 const Section = styled.section`
@@ -54,36 +66,95 @@ const ErrorMessage = styled.div`
   margin-bottom: 2rem;
 `;
 
+const StateSelector = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+  background-color: ${props => props.theme.colors.light};
+  padding: 1rem;
+  border-radius: 8px;
+  
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    flex-direction: column;
+  }
+`;
+
+const StateButton = styled.button`
+  background-color: ${props => props.active ? props.theme.colors.primary : 'white'};
+  color: ${props => props.active ? 'white' : props.theme.colors.primary};
+  border: 2px solid ${props => props.theme.colors.primary};
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: ${props => props.theme.fontSizes.medium};
+  
+  &:hover {
+    background-color: ${props => !props.active ? '#e6f0ff' : props.theme.colors.primary};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.mobile}) {
+    padding: 0.75rem 1rem;
+  }
+`;
+
 const HomePage = () => {
   const [vendors, setVendors] = useState([]);
   const [districts, setDistricts] = useState({ ap: [], tg: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeState, setActiveState] = useState('ap'); // 'ap' or 'tg'
-  const [stateFilter, setStateFilter] = useState('all'); // 'all', 'ap', 'tg', or 'both'
+  const [activeState, setActiveState] = useState('ap');
+  const [stateFilter, setStateFilter] = useState('all');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/api-data/all_combined_vendors.json');
-        setVendors(response.data);
+        // Try multiple possible paths for the data file
+        let response;
+        try {
+          response = await axios.get('/api-data/all_combined_vendors.json');
+        } catch (err) {
+          // Fallback to public directory
+          response = await axios.get('/combined_vendors.json');
+        }
+        
+        // Process vendor data
+        const processedVendors = response.data.map(vendor => ({
+          ...vendor,
+          // Calculate if vendor operates in both states
+          operatesInBothStates: Boolean(
+            vendor.ap_districts && vendor.ap_districts.length > 0 &&
+            vendor.tg_districts && vendor.tg_districts.length > 0
+          ),
+          // Calculate if vendor is statewide (serves 5+ districts in a state)
+          isStatewide: Boolean(
+            (vendor.ap_districts && vendor.ap_districts.length >= 5) ||
+            (vendor.tg_districts && vendor.tg_districts.length >= 5)
+          ),
+          // Total district count
+          districtCount: (vendor.ap_districts?.length || 0) + (vendor.tg_districts?.length || 0)
+        }));
+        
+        setVendors(processedVendors);
         
         // Extract unique districts for AP and TG
         const apDistricts = [...new Set(
-          response.data.flatMap(vendor => vendor.ap_districts || [])
+          processedVendors.flatMap(vendor => vendor.ap_districts || [])
         )];
         
         const tgDistricts = [...new Set(
-          response.data.flatMap(vendor => vendor.tg_districts || [])
+          processedVendors.flatMap(vendor => vendor.tg_districts || [])
         )];
 
-        // Combine districts and sort alphabetically
-        const allDistricts = {
+        setDistricts({
           ap: apDistricts.sort(),
           tg: tgDistricts.sort()
-        };
+        });
         
-        setDistricts(allDistricts);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -102,56 +173,6 @@ const HomePage = () => {
       </PageContainer>
     );
   }
-
-  const StateSelector = styled.div`
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    justify-content: center;
-    background-color: ${props => props.theme.colors.light};
-    padding: 1rem;
-    border-radius: 8px;
-  `;
-  
-  const StateButton = styled.button`
-    background-color: ${props => props.active ? props.theme.colors.primary : 'white'};
-    color: ${props => props.active ? 'white' : props.theme.colors.primary};
-    border: 2px solid ${props => props.theme.colors.primary};
-    padding: 0.5rem 2rem;
-    border-radius: 4px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: ${props => props.theme.fontSizes.medium};
-    
-    &:hover {
-      background-color: ${props => !props.active && props.theme.colors.light};
-    }
-  `;
-
-  const BothStatesMessage = styled.div`
-    background-color: ${props => props.theme.colors.info};
-    color: white;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  `;
-  
-  const BothStatesCount = styled.span`
-    background-color: white;
-    color: ${props => props.theme.colors.info};
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-left: 1rem;
-  `;
 
   // Count vendors in both states
   const bothStatesVendors = vendors.filter(vendor => vendor.operatesInBothStates);
